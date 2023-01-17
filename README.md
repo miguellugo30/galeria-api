@@ -1,3 +1,5 @@
+INSTRUCCIONES DE INSTALACION
+
 git clone https://github.com/miguellugo30/galeria-api.git
 
 cd galera-api
@@ -23,4 +25,7 @@ php artisan migrate
 
 php artisan db:seed
 
+php artisan storage:link
+
 php artisan serve
+
