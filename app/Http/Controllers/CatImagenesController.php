@@ -22,7 +22,7 @@ class CatImagenesController extends Controller
      */
     public function index()
     {
-        $imagenes = $this->catImagenes->get();
+        $imagenes = $this->catImagenes->orderBy('id', 'desc')->get();
 
         foreach ($imagenes as $item) {
 
@@ -43,68 +43,29 @@ class CatImagenesController extends Controller
      */
     public function store(Request $request)
     {
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Headers: *');
-        header('Access-Control-Allow-Methods: POST');
+        $image = $request->image;
+        $type = explode( '/', $request->type);
+        $nombre = str_replace(' ', '_',$request->nombre);
 
-
-        $image=$request->image;
-
-        if($image){
-
+        if($image)
+        {
             $img = substr($image, strpos($image, ",")+1);
             $data = base64_decode($img);
 
-           \Storage::disk('public')->put($request->nombre.".png", $data );
-
+           \Storage::disk('public')->put($nombre.".".$type[1], $data );
         }
 
         $this->catImagenes::create([
             'name' => $request->nombre,
-            'route' => $request->nombre.".png",
+            'route' => $nombre.".".$type[1],
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
         $data=array(
-            'image'=>$image,
             'status'=>'success'
         );
 
-        return response()->json($data,200);
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return response($data, 200)
+                ->header('Content-Type', 'text/json');
     }
 }

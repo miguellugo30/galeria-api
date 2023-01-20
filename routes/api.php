@@ -30,4 +30,4 @@ Route::post('/tokens/create', function (Request $request) {
     return ['token' => $token->plainTextToken];
 });
 
-Route::apiResource('imagenes', CatImagenesController::class)->middleware('auth:sanctum');
+Route::apiResource('imagenes', CatImagenesController::class)->middleware(['auth:sanctum', 'cors']);
